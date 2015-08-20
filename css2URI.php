@@ -25,6 +25,7 @@
  *
  */
 
+
 /* ------------ CONFIG --------------*/
 
 define( 'CSS_FILENAME', 'style.css' );
@@ -47,12 +48,22 @@ function get_images_url( $css_str ) {
 	preg_match_all( '/url\(([\s])?([\"|\'])?(.*?)([\"|\'])?([\s])?\)/i', $css_str, $matches, PREG_PATTERN_ORDER );
 	if ( $matches ) {
 		foreach ( $matches[3] as $key => $match ) {
-	    	if ( ! in_array( strtoupper( substr( $match, -4 ) ), array( '.PNG', '.JPG', '.GIF' ) ) && ! in_array( strtoupper( substr( $match, -5 ) ), array( '.JPEG' ) ) ) {
+	    	if ( ! is_image_url( $match ) ) {
 	    		unset( $matches[3][ $key ] );
 	    	}
 		}
 	}
 	return $matches[3];
+}
+
+function is_image_url( $url ) {
+	if ( in_array( strtoupper( substr( $url, -4 ) ), array( '.PNG', '.JPG', '.GIF' ) ) ) {
+		return true;
+	}
+	if ( in_array( strtoupper( substr( $url, -5 ) ), array( '.JPEG' ) ) ) {
+		return true;
+	}
+	return false;
 }
 
 function get_css_with_data_uri( $css_str, $urls ) {
